@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EcoReport - Lapor Sampah & Edukasi Zero Waste</title>
+    <link rel="shortcut icon" href="favicon.icon" type="image/x-icon">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Header Section -->
+    <header>
+      <div class="container">
+        <nav class="navbar">
+          <div class="logo">
+            <i class="fas fa-leaf"></i>
+            <h1>Eco<span>Report</span></h1>
+          </div>
+
+          <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+          </button>
+
+          <div class="nav-links" id="navLinks">
+            <a href="#" class="active" data-tab="report"
+              ><i class="fas fa-home"></i> Beranda</a
+            >
+            <a href="#" data-tab="history"
+              ><i class="fas fa-history"></i> Riwayat</a
+            >
+            <a href="#" data-tab="education"
+              ><i class="fas fa-graduation-cap"></i> Edukasi</a
+            >
+            <a href="#" data-tab="profil"><i class="fas fa-user"></i> Profil</a>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Camera Modal -->
+    <div class="modal" id="cameraModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Ambil Foto</h3>
+          <button class="close-modal" id="closeCameraModal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div id="cameraView">
+            <div id="cameraPlaceholder">
+              <i class="fas fa-camera" style="font-size: 48px"></i>
+              <p style="margin-top: 10px">Kamera siap digunakan</p>
+            </div>
+            <video
+              id="cameraStream"
+              autoplay
+              style="display: none; width: 100%; height: 100%"
+            ></video>
+            <canvas id="photoCanvas" style="display: none"></canvas>
+          </div>
+          <div class="camera-controls">
+            <button class="btn btn-outline" id="captureBtn">
+              <i class="fas fa-camera"></i> Ambil Foto
+            </button>
+            <button class="btn" id="savePhotoBtn" style="display: none">
+              <i class="fas fa-save"></i> Simpan Foto
+            </button>
+            <button
+              class="btn btn-outline"
+              id="retakeBtn"
+              style="display: none"
+            >
+              <i class="fas fa-redo"></i> Ambil Ulang
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Section -->
+    <div class="container">
+      <!-- Tab Navigation -->
+      <div class="tab-navigation">
+        <button class="tab-btn active" data-tab="report">Lapor Sampah</button>
+        <button class="tab-btn" data-tab="education">Edukasi Zero Waste</button>
+        <button class="tab-btn" data-tab="history">Riwayat Laporan</button>
+        <button class="tab-btn" data-tab="profil">Profil</button>
+      </div>
+      <div class="tab-navigation-mobile">
+        <button class="tab-btn active" data-tab="report">
+          <i class="fas fa-trash-alt"></i>
+        </button>
+        <button class="tab-btn" data-tab="education">
+          <i class="fas fa-graduation-cap"></i>
+        </button>
+        <button class="tab-btn" data-tab="history">
+          <i class="fas fa-history"></i>
+        </button>
+        <button class="tab-btn" data-tab="profil">
+          <i class="fas fa-user"></i>
+        </button>
+      </div>
+
+      <!-- Report Tab Content -->
+      <div class="tab-content active" id="reportTab">
+        <div class="main-content">
+          <div class="content-left">
+            <div class="card">
+              <h2 class="card-title">
+                <i class="fas fa-trash-alt"></i> Lapor Sampah
+              </h2>
+
+              <div class="form-group">
+                <label for="location">Lokasi Kejadian</label>
+                <input
+                  type="text"
+                  id="location"
+                  class="input-field"
+                  placeholder="Contoh: Jl. Kampus No. 5, Surabaya"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="description">Deskripsi Kejadian</label>
+                <textarea
+                  id="description"
+                  class="input-field"
+                  placeholder="Deskripsikan kejadian sampah yang ditemukan"
+                ></textarea>
+              </div>
+
+              <div class="form-group">
+                <label>Foto Bukti</label>
+                <div class="photo-upload-area" id="photoUploadArea">
+                  <i class="fas fa-cloud-upload-alt"></i>
+                  <p>Drag & drop foto di sini atau</p>
+                  <div class="upload-options">
+                    <button class="upload-btn" id="fileUploadBtn">
+                      <i class="fas fa-folder-open"></i> Pilih File
+                    </button>
+                    <button class="upload-btn camera-btn" id="cameraBtn">
+                      <i class="fas fa-camera"></i> Ambil Foto
+                    </button>
+                  </div>
+                  <input
+                    type="file"
+                    id="fileInput"
+                    accept="image/*"
+                    multiple
+                    style="display: none"
+                  />
+                </div>
+
+                <div class="preview-container" id="previewContainer">
+                  <!-- Preview gambar akan muncul di sini -->
+                </div>
+              </div>
+
+              <button class="btn btn-block" id="submitReport">
+                <span id="submitText">Kirim Laporan</span>
+                <span id="submitLoading" class="hidden">
+                  <span class="loading-spinner"></span>Mengirim...
+                </span>
+              </button>
+            </div>
+          </div>
+
+          <div class="content-right">
+            <div class="card">
+              <h2 class="card-title">
+                <i class="fas fa-lightbulb"></i> Tips Zero Waste
+              </h2>
+              <ul class="tips-list">
+                <li>Bawa tas belanja sendiri</li>
+                <li>Gunakan botol minum isi ulang</li>
+                <li>Kurangi penggunaan sedotan plastik</li>
+                <li>Pilih produk dengan kemasan minimal</li>
+                <li>Kompos sampah organik</li>
+              </ul>
+              <a
+                href="#"
+                class="btn btn-outline"
+                style="margin-top: 15px; display: inline-block"
+                >Selengkapnya</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Education Tab Content -->
+      <div class="tab-content" id="educationTab">
+        <div class="main-content">
+          <div class="content-left">
+            <div class="card">
+              <h2 class="card-title">
+                <i class="fas fa-graduation-cap"></i> Edukasi Zero Waste
+              </h2>
+
+              <ul class="education-menu">
+                <li>
+                  <a id="edu1" href="#">Cara Mengurangi Sampah Plastik</a>
+                </li>
+                <li>
+                  <a id="edu2" href="#">Pentingnya Menjaga Kebersihan</a>
+                </li>
+                <li>
+                  <a id="edu3" href="#">Tips Zero Waste Lainnya</a>
+                </li>
+              </ul>
+
+              <div style="margin-top: 30px">
+                <h3 id="artikelH3"></h3>
+                <p
+                  id="textArtikel"
+                  style="margin-top: 15px; margin-bottom: 15px"
+                ></p>
+                <ul id="artikelTips" class="tips-list"></ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-right">
+            <div class="card">
+              <h2 class="card-title">
+                <i class="fas fa-book"></i> Artikel Terkait
+              </h2>
+              <ul class="education-menu external-links">
+                <li>
+                  <a
+                    href="https://jaringnusa.id/dampak-sampah-terhadap-ekosistem-laut/"
+                    target="_blank"
+                    >Dampak Plastik Terhadap Ekosistem Laut</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="https://www.recyclingbristol.com/innovations-in-plastic-recycling-technologies/"
+                    target="_blank"
+                    >Inovasi Daur Ulang Plastik Modern</a
+                  >
+                </li>
+                <li>
+                  <a href="https://zerowaste.id" target="_blank"
+                    >Komunitas Zero Waste di Indonesia</a
+                  >
+                </li>
+                <li>
+                  <a href="https://jdih.jakarta.go.id" target="_blank"
+                    >Kebijakan Pengurangan Plastik Sekali Pakai</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- History Tab Content -->
+      <div class="tab-content" id="historyTab">
+        <div class="main-content">
+          <div class="content-left">
+            <div class="card">
+              <h2 class="card-title">
+                <i class="fas fa-history"></i> Riwayat Laporan
+              </h2>
+              <div id="historyList">
+                <!-- Riwayat laporan akan dimuat di sini secara dinamis -->
+              </div>
+            </div>
+          </div>
+
+          <div class="content-right">
+            <div class="card">
+              <h2 class="card-title">
+                <i class="fas fa-chart-line"></i> Statistik Laporan
+              </h2>
+              <div style="text-align: center; padding: 20px 0">
+                <h3
+                  style="color: var(--primary-color); font-size: 48px"
+                  id="totalReports"
+                >
+                  0
+                </h3>
+                <p style="color: var(--gray-color)">Laporan telah dikirim</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Success Message (Initially Hidden) -->
+      <div class="card success-message hidden" id="successMessage">
+        <div class="success-icon">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <h2>Laporan Berhasil Dikirim</h2>
+        <p>Terima kasih atas partisipasi Anda dalam melestarikan lingkungan.</p>
+        <p>
+          <small>Status laporan akan berubah otomatis setiap 10 menit.</small>
+        </p>
+        <div
+          style="
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+          "
+        >
+          <a href="#" class="btn" id="viewHistoryBtn">Lihat Riwayat</a>
+          <a href="#" class="btn btn-outline" id="backToReportBtn"
+            >Lapor Lagi</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="profilTab">
+      <div class="profil">
+        <div class="card">
+          <h2 class="card-title">
+            <i class="fas fa-user"></i> Profil Kelompok
+          </h2>
+          <div class="card_profil">
+            <div class="foto_profil">
+              <div class="info_profil">
+                <img src="assets/rei.jpeg" alt="" />
+                <div class="text_profil">
+                  <p><strong>Nama:</strong> Rheinhardt Aylla Irawan</p>
+                  <p><strong>NIM:</strong> 108072500043</p>
+                </div>
+              </div>
+              <div class="info_profil">
+                <img src="assets/dimas.jpeg" alt="" />
+                <div class="text_profil">
+                  <p><strong>Nama:</strong> Dimas Ahmad Maulana</p>
+                  <p><strong>NIM:</strong> 108072500125</p>
+                </div>
+              </div>
+              <div class="info_profil">
+                <img src="assets/prima.jpeg" alt="" />
+                <div class="text_profil">
+                  <p><strong>Nama:</strong> I Dewa Made Prrima Mahardika</p>
+                  <p><strong>NIM:</strong> 108072500033</p>
+                </div>
+              </div>
+              <div class="info_profil">
+                <img src="assets/raja.jpeg" alt="" />
+                <div class="text_profil">
+                  <p>
+                    <strong>Nama:</strong> Raja Andhika Sultan Syawal Drikajaya
+                  </p>
+                  <p><strong>NIM:</strong> 108072500050</p>
+                </div>
+              </div>
+              <div class="info_profil">
+                <img src="assets/rei.jpeg" alt="" />
+                <div class="text_profil">
+                  <p><strong>Nama:</strong>Efrhon Octavian Manalu</p>
+                  <p><strong>NIM:</strong> 108072500097</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-logo">
+            <i class="fas fa-leaf"></i>
+            <h3>Eco<span>Report</span></h3>
+          </div>
+          <div class="copyright">
+            &copy; 2024 EcoReport. Semua hak dilindungi.
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
